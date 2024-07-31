@@ -1,13 +1,20 @@
 const mongoose = require('mongoose');
-const uri = 'mongodb://localhost:27017/hotels';
+require('dotenv').config();
 
-mongoose.connect(uri, {
+// const mongoURL = 'mongodb://localhost:27017/hotels';
+// const mongoURL = 'mongodb+srv://shaynachhari:N8V9vxlmUKdkvUKA@cluster0.6vliwwy.mongodb.net/'
+const mongoURL =process.env.MONGOdB_URL;
+//const mongoURL = proces.env.MONGOdB_URL_lOCAL
+
+mongoose.connect(mongoURL, {
   serverSelectionTimeoutMS: 30000, 
   socketTimeoutMS: 45000, 
 });
 
 const db = mongoose.connection;
-db.on('error', console.error.bind(console, 'connection error:'));
+db.on('error', (err) => {
+  console.error('Connection error:', err);
+});
 db.once('open', () => {
   console.log('Connected to the database');
 });

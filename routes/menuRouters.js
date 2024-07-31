@@ -31,7 +31,7 @@ router.delete('/menu/:id', async (req, res) => {
     try {
         const data = await MenuItem.findByIdAndDelete(req.params.id);
         console.log('Data delete', data);
-        res.status(200).json(data);                   // Use status 201 for successful creation
+        res.status(200).json(data);                   
     }
     catch (err) {
         console.log(err);
@@ -65,4 +65,4 @@ router.get('/menu/:tasteType', async (req, res) => {
     }
 });
 
- module.exports = router;
+module.exports = router;
