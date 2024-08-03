@@ -39,6 +39,9 @@ const personSchema = new mongoose.Schema({
     password: {
         required: true,
         type: String
+    },
+    image: {
+        type: String // Path to the image
     }
 
 });

@@ -2,28 +2,21 @@ const express = require('express');
 const router = express.Router();
 const Person = require('./../models/Person');
 const {jwtAuthMiddleware,generateToken} = require('./../jwt')
+const upload = require('./../uploadMiddleware')
 
 //signuo API
-router.post('/person/signup', async (req, res) => {
+router.post('/person/signup', upload, async (req, res) => {
     try {
-        const data = req.body;                       // Correctly access req.body
-        console.log('Data received:', data);         // Log the data received
+        const data = req.body;
+        if (req.file) {
+            data.image = req.file.path; // Store image path in the database
+        }
         const newPerson = new Person(data);
         const response = await newPerson.save();
-        console.log("Data Saved:", response); 
-        
-        // add token for token url
-        const payload = {
-            id: response.id,
-            username: response.username
-        }
-        console.log(JSON.stringify(payload));
-        // const token = generateToken(response.username)
-        const token = generateToken(payload)
-        console.log("Token is :" , token)
-        res.status(201).json({response: response, token: token});                   // Use status 201 for successful creation
-    }
-     catch (err) {
+        const payload = { id: response.id, username: response.username };
+        const token = generateToken(payload);
+        res.status(201).json({ response: response, token: token });
+    } catch (err) {
         console.log(err);
         res.status(500).json({ error: "Internal Server Error" });
     }
@@ -40,7 +33,7 @@ router.post('/person/login', async(req,res)=>{
         }
         //token generate
         const payload = {
-            id: user.id,
+           id: user.id,
             username: user.username
         } 
         const token = generateToken(payload)
@@ -71,18 +64,6 @@ router.get('/person',jwtAuthMiddleware, async (req, res) => {
     try {
         const data = await Person.find();
         console.log('Data Succed:', data);
-        res.status(200).json(data);                   // Use status 201 for successful creation
-    }
-    catch (err) {
-        console.log(err);
-        res.status(500).json({ error: "Internal Server Error" });
-    }
-});
-
-router.get('/personFind/:id', async (req, res) => {
-    try {
-        const data = await Person.findById(req.params.id);
-        console.log('Person Data find with id', data);
         res.status(200).json(data);                   
     }
     catch (err) {

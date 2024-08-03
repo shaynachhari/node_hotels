@@ -15,6 +15,7 @@ const logRequest = (req, res, next) => {
 }
 app.use(logRequest);
 
+
 //add auth file
 app.use(passport.initialize());
 const localAuthMiddleware = passport.authenticate('local', {session: false})
@@ -30,6 +31,10 @@ const menuItemRoutes = require('./routes/menuRouters');
 // Use the routers (add middleware for check hashpasword)
 app.use('/', personRoutes);
 app.use('/', menuItemRoutes);
+
+
+// Serve static files from the 'uploads' folder
+app.use('/uploads', express.static('uploads'));
   
 app.listen(PORT, ()=>{
     console.log('listening on port 3000');
