@@ -29,7 +29,7 @@ router.get('/person', async (req, res) => {
     }
 });
 
-router.get('/person_ids/:id', async (req, res) => {
+router.get('/person_find/:id', async (req, res) => {
     try {
         const data = await Person.findById(req.params.id);
         console.log('Person Data find with id', data);
